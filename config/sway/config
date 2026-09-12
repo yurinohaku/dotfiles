@@ -1,0 +1,219 @@
+## ~/.config/sway/config
+
+# ==========================================
+# 1. 変数定義 (Variables)
+# ==========================================
+set $mod Mod4
+set $alt Mod1
+
+# 基本アプリ・コマンド
+set $browser      chromium
+set $menu         wofi -G --show drun
+set $terminal     foot
+set $clipboard    cliphist list | wofi --show dmenu | cliphist decode | wl-copy
+
+# カスタムスクリプト群 ($bin_sway)
+set $bin_sway     $HOME/.config/sway/bin_sway
+set $hdmi_play    $bin_sway/hdmi_play.py
+set $record       $bin_sway/record_toggle.sh
+set $reverse_scr  $bin_sway/reverse_screen_sway.py
+set $wofimenu     $bin_sway/wofimenu.py -t $bin_sway/wofimenu.csv
+set $move_ws      $bin_sway/move_ws.py -d
+
+# 音量・輝度・スクショ
+set $vol_up       pactl set-sink-volume @DEFAULT_SINK@ +5%
+set $vol_down     pactl set-sink-volume @DEFAULT_SINK@ -5%
+set $vol_mute     pactl set-sink-mute @DEFAULT_SINK@ toggle
+set $bright_up    brightnessctl set +5%
+set $bright_down  brightnessctl set 5%- --min-value=2000
+set $shot_f       grimshot --notify save output $HOME/Pictures/screenshot_$(date "+%y%m%d-%H%M%S").png
+set $shot_w       grimshot --notify save active $HOME/Pictures/screenshot_$(date "+%y%m%d%-H%M%S").png
+
+# 画面・壁紙
+set $screen_sleep swayidle -w timeout 1800 'swaymsg "output * power off"' resume 'swaymsg "output * power on"'
+set $screen_off   swayidle -w timeout 1    'swaymsg "output * power off"' resume 'swaymsg "output * power on"; pkill -f "swayidle -w .*timeout 1"'
+set $bg           swaybg -i "$(find ~/wallpaper -type f | shuf -n 1)" -m fill
+
+# ==========================================
+# 2. 自動起動 (Startup)
+# ==========================================
+exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+exec systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+exec mkdir -p $HOME/Pictures                # スクリーンショット保存先
+exec fcitx5                                 # 日本語入力
+exec dunst                                  # 通知
+exec wl-paste --watch cliphist store &      # クリップボード履歴
+exec batsignal                              # バッテリ低下警告
+exec waybar                                 # ステータスバー
+exec $screen_sleep                          # 自動スリープ
+exec $bg                                    # 壁紙
+exec dropbox
+
+# ==========================================
+# 3. 入力デバイス & ウィンドウ挙動 (Input & Appearance)
+# ==========================================
+# CapsLock無効化
+input "type:keyboard" {
+    xkb_options "caps:none"
+}
+# タイピング時無効, タップ/ドラッグ有効など
+input "type:touchpad" {
+    dwt enabled
+    tap enabled
+    drag enabled
+    natural_scroll no
+    scroll_method edge
+    middle_emulation enabled
+}
+
+default_border pixel 4
+default_floating_border normal
+hide_edge_borders none
+font xft:URWGothic-Book 11
+gaps inner 14
+gaps outer -2
+smart_gaps on
+smart_borders on
+
+# 全ウィンドウ枠をピクセル指定
+for_window [class="^.*"] border pixel
+# 通知ウィンドウにフォーカス
+for_window [urgent=latest] focus
+
+# $mod+ドラッグで移動・サイズ変更
+floating_modifier $mod normal
+
+# ==========================================
+# 4. ショートカット (Shortcuts)
+# ==========================================
+# --- システム & アプリ起動 ---
+bindsym $mod+Return         exec $terminal
+bindsym $mod+Shift+Return   exec $browser
+bindsym $mod+w              exec $browser
+bindsym $mod+a              exec $menu
+bindsym $mod+b              exec $wofimenu
+bindsym $mod+c              exec $clipboard
+bindsym $mod+d              exec $hdmi_play
+bindsym $mod+t              layout tabbed
+bindsym $mod+s              layout stacking
+bindsym $mod+e              layout toggle split
+bindsym $mod+v              split v
+bindsym $mod+semicolon      split h
+bindsym $mod+f              fullscreen
+bindsym $mod+space          floating toggle
+bindsym --whole-window $mod+button3 floating toggle
+
+# --- ウィンドウ操作・フォーカス ---
+bindsym $mod+i              focus up
+bindsym $mod+k              focus down
+bindsym $mod+j              focus left
+bindsym $mod+l              focus right
+bindsym $mod+Shift+i        move up
+bindsym $mod+Shift+k        move down
+bindsym $mod+Shift+j        move left
+bindsym $mod+Shift+l        move right
+
+
+bindsym $mod+Right          exec $move_ws right
+bindsym $mod+Shift+Right    exec $move_ws right -m
+bindsym $mod+comma          exec $move_ws left
+bindsym $mod+Shift+comma    exec $move_ws left -m
+bindsym $mod+period         exec $move_ws right
+bindsym $mod+Shift+period   exec $move_ws right -m
+
+# --- メディア・システム制御 ---
+bindsym $mod+equal          exec $vol_up
+bindsym $mod+minus          exec $vol_down
+bindsym $mod+m              exec $vol_mute
+bindsym $mod+Shift+equal    exec $bright_up                 # 輝度アップ
+bindsym $mod+Shift+minus    exec $bright_down               # 輝度ダウン
+bindsym $mod+p              exec $shot_f
+bindsym $mod+Shift+p        exec $shot_w
+bindsym $mod+o              exec $screen_off
+bindsym $mod+Ctrl+r         exec $record                    # 録画トグル
+bindsym Ctrl+Shift+r        exec $reverse_scr               # 画面反転
+bindsym $mod+Shift+v        exec pavucontrol
+bindsym $mod+h              exec killall waybar || waybar
+bindsym $mod+Shift+w        exec $bg ; exec pkill -o swaybg
+bindsym $mod+Shift+x        exec xkill
+
+# --- 終了・再読み込み ---
+bindsym $mod+Shift+q        kill
+bindsym $alt+F4             kill
+bindsym $alt+Shift+s        exec shutdown now
+
+# ==========================================
+# 5. リサイズモード (Resize Mode)
+# ==========================================
+bindsym $mod+r mode "resize"
+mode "resize" {
+    bindsym j     resize shrink width  10px
+    bindsym k     resize grow   height 10px
+    bindsym i     resize shrink height 10px
+    bindsym l     resize grow   width  10px
+    bindsym Left  resize shrink width  10px
+    bindsym Down  resize grow   height 10px
+    bindsym Up    resize shrink height 10px
+    bindsym Right resize grow   width  10px
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+# ==========================================
+# 6. ワークスペース (Workspaces)
+# ==========================================
+# $mod+数字: 移動 | +Ctrl: ウィンドウ移動 | +Shift: 移動＆追従
+bindsym $mod+Tab       workspace next
+bindsym $mod+Shift+Tab workspace prev
+
+set $ws1 1
+set $ws2 2
+set $ws3 3
+set $ws4 4
+set $ws5 5
+set $ws6 6
+set $ws7 7
+set $ws8 8
+set $ws9 9
+
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+
+bindsym $mod+Ctrl+1 move container to workspace $ws1
+bindsym $mod+Ctrl+2 move container to workspace $ws2
+bindsym $mod+Ctrl+3 move container to workspace $ws3
+bindsym $mod+Ctrl+4 move container to workspace $ws4
+bindsym $mod+Ctrl+5 move container to workspace $ws5
+bindsym $mod+Ctrl+6 move container to workspace $ws6
+bindsym $mod+Ctrl+7 move container to workspace $ws7
+bindsym $mod+Ctrl+8 move container to workspace $ws8
+bindsym $mod+Ctrl+9 move container to workspace $ws9
+
+bindsym $mod+Shift+1 move container to workspace $ws1; workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2; workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3; workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4; workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5; workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6; workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7; workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8; workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9; workspace $ws9
+
+# ==========================================
+# 7. テーマカラー (Theme colors)
+# ==========================================
+# class                   border  backgr. text    indic.   child_border
+client.focused            #dddd00 #dddd00 #80FFF9 #FDF6E3
+client.focused_inactive   #2F3D44 #2F3D44 #1ABC9C #454948
+client.unfocused          #2F3D44 #2F3D44 #1ABC9C #454948
+client.urgent             #CB4B16 #FDF6E3 #1ABC9C #268BD2
+client.placeholder        #000000 #0c0c0c #ffffff #000000 
+client.background         #2B2C2B
