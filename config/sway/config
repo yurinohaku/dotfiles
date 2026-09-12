@@ -17,6 +17,7 @@ set $bin_sway     $HOME/.config/sway/bin_sway
 set $hdmi_play    $bin_sway/hdmi_play.py
 set $record       $bin_sway/record_toggle.sh
 set $reverse_scr  $bin_sway/reverse_screen_sway.py
+set $pushbullet   $bin_sway/pushbullet_notify.py
 set $wofimenu     $bin_sway/wofimenu.py -t $bin_sway/wofimenu.csv
 set $move_ws      $bin_sway/move_ws.py -d
 
@@ -46,6 +47,7 @@ exec dunst                                  # 通知
 exec wl-paste --watch cliphist store &      # クリップボード履歴
 exec batsignal                              # バッテリ低下警告
 exec waybar                                 # ステータスバー
+exec $pushbullet                            # Pushbullet通知
 exec $screen_sleep                          # 自動スリープ
 exec $bg                                    # 壁紙
 exec dropbox
