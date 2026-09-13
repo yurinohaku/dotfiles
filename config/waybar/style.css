@@ -36,7 +36,12 @@ window#waybar {
 }
 
 /* 各モジュールの固有文字色 */
-#mpris      { color: #26a198; }
+#mpris      {
+    background: #26a198; 
+    color: #ffffff;
+    padding: 0 8px;
+    border-radius: 5px;
+}
 #window     { color: grey; }
 #pulseaudio { color: #268bd2; }
 #bluetooth  { color: #268bd2; }
