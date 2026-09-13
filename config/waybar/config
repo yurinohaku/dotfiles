@@ -10,11 +10,13 @@
         "sway/mode",
     ],
     "modules-center": [
+        "mpris"
     ],
     "modules-right": [
         "custom/record",
         "custom/update",
         "pulseaudio",
+        "bluetooth",
         "memory",
         "cpu",
         "network",
@@ -43,9 +45,22 @@
         "signal": 8,
         "on-click": "pkill -RTMIN+8 waybar"
     },
+    "mpris": {
+        "format": "{player_icon} {title}",
+        "format-paused": "{status_icon} <i>{title}</i>",
+        "player-icons": {
+            "default": "▶",
+            "chromium": ""
+        },
+        "status-icons": {
+            "paused": "⏸"
+        },
+        "max-length": 40,
+        "interval": 1
+    },
     "pulseaudio": {
+        // "format-bluetooth": "{icon}  {volume}%",
         "format": "{icon} {volume:2}%",
-        "format-bluetooth": "{icon}  {volume}%",
         "format-muted": "MUTE",
         "format-icons": {
             "headphones": "",
@@ -57,6 +72,11 @@
         "scroll-step": 5,
         "on-click": "pavucontrol",
         "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle"
+    },
+    "bluetooth": {
+        // Bluetooth音声機器接続時にバッテリーを表示
+        "format": "", // 未接続時は非表示
+        "format-connected": "({device_battery_percentage}%)",
     },
     "memory": {
         // "format": "Mem:{}%",
