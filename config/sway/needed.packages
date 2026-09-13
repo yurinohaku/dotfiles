@@ -1,0 +1,20 @@
+# Sway基本環境
+sudo pacman -S sway xorg-xwayland foot xdg-desktop-portal xdg-desktop-portal-wlr xdg-desktop-portal-gtk polkit-gnome
+
+# Sway周辺ツール
+sudo pacman -S waybar wofi swayidle swaybg dunst cliphist batsignal brightnessctl pavucontrol grim slurp sway-contrib wf-recorder
+
+# フォント
+sudo pacman -S otf-font-awesome noto-fonts-cjk gsfonts
+
+# 日本語入力
+sudo pacman -S fcitx5 fcitx5-im fcitx5-mozc fcitx5-configtool
+
+# アプリケーション
+sudo pacman -S chromium thunar mpv
+
+# Pythonライブラリ
+sudo pacman -S python-opencv python-pygame python-websocket-client
+
+## dropbox
+yay -S dropbox libappindicator
