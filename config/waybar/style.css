@@ -37,6 +37,7 @@ window#waybar {
 
 /* 各モジュールの固有文字色 */
 #mpris      { color: #26a198; }
+#window     { color: grey; }
 #pulseaudio { color: #268bd2; }
 #bluetooth  { color: #268bd2; }
 #memory     { color: #2aa198; }
