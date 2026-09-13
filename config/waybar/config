@@ -1,0 +1,126 @@
+// -*- mode: json -*-
+
+{
+    "layer": "top",
+    "position": "top",
+    "spacing": 6,
+
+    "modules-left": [
+        "sway/workspaces",
+        "sway/mode",
+    ],
+    "modules-center": [
+    ],
+    "modules-right": [
+        "custom/record",
+        "custom/update",
+        "pulseaudio",
+        "memory",
+        "cpu",
+        "network",
+        "battery",
+        "clock",
+        "tray"
+    ],
+
+    "sway/workspaces": {
+        "disable-scroll": true,
+        "format": "{name}"
+    },
+    "sway/mode": {
+        "format": "<span style=\"italic\">{}</span>"
+    },
+    "custom/record": {
+        "format":"<span color='red'>{}</span>",
+        "exec": "if [ -f /tmp/wf-recorder.pid ]; then echo '🔴 REC'; else echo ''; fi",
+        "interval": 1,
+        "tooltip": false
+    },
+    "custom/update": {
+        "format":"<span color='red'>{}</span>",
+        "exec": "[ $(yay -Qu | wc -l) -ne 0 ] && echo 'Update' || echo ''",
+        "interval": 3600,
+        "signal": 8,
+        "on-click": "pkill -RTMIN+8 waybar"
+    },
+    "pulseaudio": {
+        "format": "{icon} {volume:2}%",
+        "format-bluetooth": "{icon}  {volume}%",
+        "format-muted": "MUTE",
+        "format-icons": {
+            "headphones": "",
+            "default": [
+                "",
+                ""
+            ]
+        },
+        "scroll-step": 5,
+        "on-click": "pavucontrol",
+        "on-click-right": "pactl set-sink-mute @DEFAULT_SINK@ toggle"
+    },
+    "memory": {
+        // "format": "Mem:{}%",
+        "format-critical":  "<span color='#c20821'><b>Mem:{}%</b></span>",
+        "format-high":      "<span color='#e03c52'>Mem:{}%</span>",
+        "format-medium":    "<span color='#85c600'>Mem:{}%</span>",
+        "format-low":       "<span color='grey'>Mem:LOW</span>",
+        "tooltip": false,
+        "interval": 5,
+        "states": {
+            "critical": 80,
+            "high": 50,
+            "medium": 15,
+            "low": 0,
+        },
+    },
+    "cpu": {
+        // "format": "{usage:2}%",
+        "format-critical":  "<span color='#c20821'><b>CPU:MAX</b></span>",
+        "format-high":      "<span color='#e03c52'>CPU:HIGH</span>",
+        "format-medium":    "<span color='#85c600'>CPU:MED</span>",
+        "format-low":       "<span color='grey'>CPU:LOW</span>",
+        "tooltip": false,
+        "interval": 2,
+        "states": {
+            "critical": 80,
+            "high": 50,
+            "medium": 15,
+            "low": 0,
+        },
+    },
+    "network": {
+        // "interface": "wlp2s0", // (Optional) To force the use of this interface
+        "format-wifi": "WiFi",
+        "tooltip-format": "{essid} {signalStrength}%",
+        "format-ethernet": "有線",
+        "format-disconnected": "−−−",
+        "interval" : 7,
+    },
+    "battery": {
+        "states": {
+            "good": 95,
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": "AC:{capacity}%",
+        "format-plugged": "AC:{capacity}%",
+        "format-icons": [
+            "",
+            "",
+            "",
+            "",
+            ""
+        ]
+    },
+    "clock": {
+        "interval":1,
+        "format": "{:%m/%d%a %H:%M}",
+        "tooltip-format": "{:%H:%M:%S}",
+        "on-click":"xdg-open 'https://calendar.google.com/calendar'"
+        //"on-click":"xdg-open 'https://google.com/'"
+    },
+    "tray": {
+        "icon-size": 20
+    }
+}

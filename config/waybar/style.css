@@ -1,0 +1,52 @@
+* {
+    font-size: 18px;
+    font-family: monospace;
+}
+
+window#waybar {
+    background: #292b2e;
+    color: #fdf6e3;
+}
+
+/* 右側モジュールの共通余白設定 */
+#pulseaudio,
+#memory,
+#cpu,
+#network,
+#battery,
+#clock,
+#tray {
+    padding: 0 5px;
+}
+
+#workspaces button {
+    padding: 0 2px;
+    color: #fdf6e3;
+}
+#workspaces button.focused {
+    background: #11bb33;
+    color: #fdf6e3;
+}
+#workspaces button:hover {
+    box-shadow: inherit;
+    text-shadow: inherit;
+    background: #1a1a1a;
+    border: #1a1a1a;
+    padding: 0 3px;
+}
+
+/* 各モジュールの固有文字色 */
+#pulseaudio { color: #268bd2; }
+#memory     { color: #2aa198; }
+#cpu        { color: #6c71c4; }
+#network    { color: #26a198; }
+#battery    { color: #859900; }
+#clock      { color: #26a198; }
+
+#mode {
+    background: #ff0000;
+    color: #ffffff;
+    padding: 0 8px;
+    border-radius: 5px;
+    font-weight: bold;
+}
