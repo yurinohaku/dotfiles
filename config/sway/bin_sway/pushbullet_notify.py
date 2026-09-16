@@ -7,8 +7,8 @@ import subprocess
 from websocket import WebSocketApp
 
 ## API_KEY
-script_dir = pathlib.Path(__file__).resolve().parent
-with open(script_dir/'pushbullet.key') as f:
+apifile = pathlib.Path.home()/".config/sway/pushbullet.key"
+with open(apifile) as f:
     API_KEY = f.read().rstrip()
 
 def notify(title, body):

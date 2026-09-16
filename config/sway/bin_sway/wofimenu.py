@@ -7,7 +7,7 @@ import os, glob
 
 def get_args():
     parser = argparse.ArgumentParser(description='ブックマーク管理')
-    parser.add_argument('-t','--text_files',default=[],nargs='*', help='title,urlのcsv形式が基本、md形式にも対応予定。')
+    parser.add_argument('-t','--text_files',default=[],nargs='*', help='title,urlのcsv形式')
     return parser.parse_args()
 
 

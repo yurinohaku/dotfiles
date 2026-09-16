@@ -18,7 +18,7 @@ set $hdmi_play    $bin_sway/hdmi_play.py
 set $record       $bin_sway/record_toggle.sh
 set $reverse_scr  $bin_sway/reverse_screen_sway.py
 set $pushbullet   $bin_sway/pushbullet_notify.py
-set $wofimenu     $bin_sway/wofimenu.py -t $bin_sway/wofimenu.csv
+set $wofimenu     $bin_sway/wofimenu.py -t $HOME/.config/sway/wofimenu.csv
 set $move_ws      $bin_sway/move_ws.py -d
 
 # 音量・輝度・スクショ
